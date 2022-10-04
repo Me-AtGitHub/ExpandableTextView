@@ -9,6 +9,7 @@
     <com.example.expendabletextview.ExpendableTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:completeText="There's also an option to create a Java Library, which builds a traditional JAR file. While a JAR file is useful for many projects— especially when you want to share code with other platforms—it does not allow you to include Android resources or manifest files, which is very useful for code reuse in Android projects. So this guide focuses on creating Android libraries."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

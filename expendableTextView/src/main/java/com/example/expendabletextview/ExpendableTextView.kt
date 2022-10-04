@@ -1,5 +1,6 @@
 package com.example.expendabletextview
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -38,6 +39,9 @@ class ExpendableTextView : ViewGroup {
 
             actionTextColor = getColor(R.styleable.ExpendableTextView_actionTextColor, Color.RED)
 
+            expandDuration = getInteger(R.styleable.ExpendableTextView_collapseDuration, 300)
+            collapseDuration = getInteger(R.styleable.ExpendableTextView_collapseDuration, 300)
+
             recycle()
         }
 
@@ -46,7 +50,8 @@ class ExpendableTextView : ViewGroup {
         init()
     }
 
-    private var completeTextHeight: Int = 0
+    private var expandedHeight: Int = 0
+    private var collapsedHeight: Int = 0
 
     private fun init() {
         Log.d(TAG, "init: ")
@@ -54,21 +59,26 @@ class ExpendableTextView : ViewGroup {
         addView(textView)
         textView.text = completeText
 
-        textView.measure(
-            MeasureSpec.makeMeasureSpec(textView.width, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(textView.height, MeasureSpec.EXACTLY)
-        )
+        textView.measureLayout()
 
-        completeTextHeight = textView.layout.height + textView.paddingBottom + textView.paddingTop
+        expandedHeight = textView.layout.height + textView.paddingBottom + textView.paddingTop
 
         if (completeText.length > truncatedLength) {
-            val spannedText =
-                getSpannableString(
-                    completeText.substring(0, truncatedLength),
-                    actionCollapsedText,
-                    actionTextColor,
-                    ::actionCollapseClicked)
-        }
+
+            val spannedText = getSpannableString(
+                completeText.substring(0, truncatedLength),
+                actionCollapsedText,
+                actionTextColor,
+                ::actionCollapseClicked
+            )
+            textView.text = spannedText
+
+        } else textView.text = completeText
+
+        textView.measureLayout()
+
+        collapsedHeight = textView.layout.height + textView.paddingBottom + textView.paddingTop
+
     }
 
 
@@ -110,6 +120,19 @@ class ExpendableTextView : ViewGroup {
             _actionTextColor = value
         }
 
+    private var _collapseDuration: Int = 300
+    var collapseDuration
+        get() = _collapseDuration
+        set(value) {
+            _collapseDuration = value
+        }
+
+    private var _expandDuration: Int = 300
+    var expandDuration
+        get() = _expandDuration
+        set(value) {
+            _expandDuration = value
+        }
 
     protected fun getSpannableString(
         string: String, spanString: String, color: Int, clickAction: () -> Unit
@@ -141,12 +164,62 @@ class ExpendableTextView : ViewGroup {
         }
     }
 
-    fun actionCollapseClicked() {
 
+    private fun View.measureLayout() {
+        val widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        measure(widthSpec, heightSpec)
     }
 
-    fun actionExpendClicked() {
+    private fun actionCollapseClicked() {
 
+        val spannedString = getSpannableString(
+            completeText,
+            actionExpendedText,
+            actionTextColor,
+            ::actionExpendClicked
+        )
+
+        textView.text = spannedString
+
+        ValueAnimator.ofInt(collapsedHeight, expandedHeight).apply {
+
+            addUpdateListener {
+                val value = animatedValue as Int
+                val params = textView.layoutParams
+                params.height = value
+                textView.layoutParams = params
+            }
+
+            duration = expandDuration.toLong()
+            start()
+
+        }
+    }
+
+    private fun actionExpendClicked() {
+
+        ValueAnimator.ofInt(expandedHeight, collapsedHeight).apply {
+
+            addUpdateListener {
+                val value = animatedValue as Int
+                val params = textView.layoutParams
+                params.height = value
+                textView.layoutParams = params
+            }
+
+            duration = collapseDuration.toLong()
+
+            start()
+        }
+
+        val spannedText = getSpannableString(
+            completeText.substring(0, truncatedLength),
+            actionCollapsedText,
+            actionTextColor,
+            ::actionCollapseClicked
+        )
+        textView.text = spannedText
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {

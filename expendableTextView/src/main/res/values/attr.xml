@@ -7,6 +7,8 @@
         <attr name="truncationLength" format="integer" />
         <attr name="actionTextColor" format="color" />
         <attr name="android:fontFamily" />
+        <attr name="collapseDuration" format="integer" />
+        <attr name="expendDuration" format="integer" />
 
     </declare-styleable>
 </resources>
