@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpendableTextView">
+        <attr name="completeText" format="string" />
+        <attr name="actionExpendedText" format="string" />
+        <attr name="actionCollapsedText" format="string" />
+        <attr name="truncationLength" format="integer" />
+        <attr name="actionTextColor" format="color" />
+        <attr name="android:fontFamily" />
+
+    </declare-styleable>
+</resources>
