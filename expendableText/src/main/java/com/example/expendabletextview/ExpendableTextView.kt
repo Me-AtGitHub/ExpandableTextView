@@ -174,10 +174,7 @@ class ExpendableTextView : ViewGroup {
     private fun actionCollapseClicked() {
 
         val spannedString = getSpannableString(
-            completeText,
-            actionExpendedText,
-            actionTextColor,
-            ::actionExpendClicked
+            completeText, actionExpendedText, actionTextColor, ::actionExpendClicked
         )
 
         textView.text = spannedString
@@ -226,13 +223,35 @@ class ExpendableTextView : ViewGroup {
         Log.d(TAG, "onLayout: ")
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    /*override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+
 
         Log.d(TAG, "onMeasure: ")
-        val mode = MeasureSpec.getMode(widthMeasureSpec) // mode == View.MesaureSpec.EXACTLY
-        val size = MeasureSpec.getSize(widthMeasureSpec) // 400
-    }
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec) // mode == View.MesaureSpec.EXACTLY
+        var widthSize = MeasureSpec.getSize(widthMeasureSpec) // 400
+
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        var heightSize = MeasureSpec.getSize(heightMeasureSpec)
+
+        when (widthMode) {
+            MeasureSpec.EXACTLY -> {}
+            MeasureSpec.UNSPECIFIED -> widthSize = 0
+            MeasureSpec.AT_MOST -> widthSize = 0
+        }
+
+        when (heightMode) {
+            MeasureSpec.EXACTLY -> {}
+            MeasureSpec.UNSPECIFIED -> heightSize = 0
+            MeasureSpec.AT_MOST -> heightSize = 0
+        }
+
+        val measureWidth = MeasureSpec.makeMeasureSpec(widthSize, widthMode)
+        val measureHeight = MeasureSpec.makeMeasureSpec(heightSize, heightMode)
+        measure(measureWidth, measureHeight)
+
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+    }*/
 
 
     override fun onAttachedToWindow() {
