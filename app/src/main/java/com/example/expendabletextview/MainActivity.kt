@@ -1,12 +1,12 @@
 package com.example.expendabletextview
 
-import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.AnimationUtils
-import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.expendabletextview.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,49 +18,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.viewPager.adapter = PagerAdapter(this)
 
-
-        binding.tvText.animation = AnimationUtils.loadAnimation(
-            this,
-            R.anim.graph_point_animation
-        )
-//        animate()
-
-
-    }
-
-
-    private fun animationStart() {
-        ScaleAnimation(0.5F, 1F, 0.5F, 1F).apply {
-            duration = 500
-            fillAfter = true
-            binding.tvText.animation = this
-        }
-    }
-
-    private fun animate() {
-        ValueAnimator.ofInt(40, 40 * 3).apply {
-
-            interpolator = AccelerateInterpolator()
-            duration = 1500
-//            repeatMode = ValueAnimator.REVERSE
-            repeatCount = ValueAnimator.INFINITE
-
-            addUpdateListener {
-                val value = animatedValue as Int
-
-                val params = binding.tvText.layoutParams
-                params.width = value
-                params.height = value
-                binding.tvText.layoutParams = params
-
-
-//                Log.d("animate", "animate: ${value}")
-//                binding.tvText.alpha = ((value - 40)/80).toFloat()
+        TabLayoutMediator(binding.tabLayout,binding.viewPager){tab, position->
+            when(position){
+                0-> tab.setIcon(R.drawable.home_selector)
+                else -> tab.setIcon(R.drawable.favorite_selector)
             }
+        }.attach()
 
-            start()
-        }
+    }
+
+    class PagerAdapter(fragmentActivity: FragmentActivity) :
+        FragmentStateAdapter(fragmentActivity) {
+        override fun getItemCount() = 2
+        override fun createFragment(position: Int) = PlaceHolderFragment.get(position)
     }
 
 }

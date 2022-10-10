@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ExpendableTextView</string>
+    <string name="dummy_text">Custom Views …. Yes… we all know Custom views are one of the most interesting topics and Fundamental topics of Android. It has effects throughout our application in terms of performance and look n feel. When I started learning about the custom view. I found there are lots of scattered information about the custom views. So I tried to add One Blog Series. where we learn and practice some basic concepts of custom views. before starting let’s brush up some basic terms.</string>
 </resources>
